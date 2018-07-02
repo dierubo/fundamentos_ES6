@@ -1,0 +1,16 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+#efectoMouse {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+#efectoMouse figure {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

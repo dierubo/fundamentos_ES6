@@ -1,0 +1,976 @@
+
+-------------
+
+SCOPE ---> El ámbito de una variable es la zona del programa en la que se define la variable. Tiene dos ámbitos: Global y Función.
+
+Si una función está declarada como 'var' y se muestra con un console.log antes de la definición dara como resultado 'undefined' , en cambio con let
+dará un error de que no está definida. Ej:
+
+console.log(mensaje); // Esto dará como undefined
+
+var mensaje = 'Hola'
+
+********
+
+console.log(mensaje); // Saltará un error ya que la variable no está definida
+
+let mensaje = 'Hola'
+
+*********
+
+let mensaje = 'Hola';
+
+if (true) {
+    mensaje = 'Hola 2';
+}
+
+console.log(mensaje) // Se mostrará el valor 'Hola' ya que el otro valor 'Hola 2' es dentro del IF nada más
+
+----------
+
+CONST ----> El nombre de la constante se recomienda que vaya en mayúscula y se obliga a darle un valor en el momento de definirla. Si se cambiase el valor
+            durante el código daría un error.
+            En cambio, si una constante es un objeto tal que así:
+            
+                const PERSONA = {
+                    nombre: "Persona",
+                    apellido: "Herrera"
+                }
+            Sí que está permitido cambiar el valor de las propiedades tal que así --> PERSONA.nombre = "Javier"
+            
+            Pero sí que NO está permitido cambiar desde 0 la constante:
+                PERSONA = {
+                    nombre: "John",
+                    apellido: "Garcia"
+                }
+                Daría error
+
+----------
+
+BUCLES FOR: 
+
+for (var i = 0; i <= 10; i++) { 
+}
+
+console.log(i); // Valor 11
+
+En cambio, con LET daría error porque i no estaría definida
+
+------------------
+
+STARTSWITH, ENDSWITH, INCLUDES --> Solamente funciona con STRINGS y son CaseSensitive
+
+let saludo = "Hola Mundo";
+
+console.log( saludo.startsWith("Hola") );
+console.log( saludo.startsWith("Mu", 5) ); // Empieza desde la posición 5. Funciona igual con el ENDSWITH e INCLUDES
+
+console.log( saludo.endsWith("!") );
+
+console.log( saludo.includes("x") ); // Misma función que el indexOf pero en este caso devuelve un TRUE o FALSE
+console.log( saludo.includes("a" ,5) ); // Esto devolverá un FALSE porque empezará desde la posición 5 y no encontrará ninguna 'a'
+
+-------------------
+
+REPEAT ----> Duplicar String. Devuelve un string duplicado tantas veces como se quiera.Solamente para STRINGS
+
+let texto = "Hola";
+
+console.log( texto.repeat(2) ) // se mostrará HolaHola
+
+
+------------------
+
+TEMPLATES LITERALES
+
+let nombre = 'Maria';
+let apellido = 'Martinez'
+
+let nombreCompleto = `El nombre completo es ${nombre} ${apellido}`
+console.log(nombreCompleto);
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+//// TODAS LAS FUNCIONES DE JAVASCRIPT DEVUELVEN ALGO. SI NO HAY NADA DEVOLVERÁ UN UNDEFINED ///
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+function obtenerNombre() {
+    return 'Maria Martinez';
+}
+
+let nombreCompleto3 = `El nombre completo es ${obtenerNombre()} ${ 1 + 2 }`;
+console.log( nombreCompleto3 );
+
+// Para un salto de línea también valen
+let multiLinea = `<h1 class="algo">${nombre}</h1>
+<p>Hola mundo ${apellido}</p>`;
+
+console.log(multiLinea);
+
+-------
+
+TEMPLATE CON TAGS
+
+function etiqueta( literales, ...substituciones) {
+    console.log(literales);
+    console.log(substituciones);
+
+    return "Otro texto";
+}
+
+let unidades = 5,
+    costes = 10;
+
+let mensaje = etiqueta `${unidades} lapices cuestan ${unidades * costes} euros`;
+
+console.log( mensaje );
+
+---------------------------------------------
+
+PARÁMETROS OPCIONALES
+
+function saludo ( mensaje = "Hola Mundo", tiempo = 1000) {
+    setTimeout( function() {
+        console.log( mensaje );
+    }, tiempo)
+}
+
+saludo();
+
+function saludar (fn = fnTemporal, persona = {nombre: 'Fernando'}) {
+    
+    console.log( typeof fn);
+
+    if (typeof fn === 'undefined') {
+        console.error ('No es una función');
+        return;
+    }
+
+    fn();
+
+    console.log(persona)
+}
+
+function fnTemporal() {
+    console.log("Hola Mundo FN");
+}
+
+var persona = {
+    nombre: 'Juan';
+}
+
+saludar(fnTemporal, persona);
+
+------------------
+
+functino sumar (a = 1, b = 2) {
+    console.log(arguments);
+}
+
+sumar(1, 2, 5, "fernando");
+
+sumar(); // arguments se mostrará vacío
+
+
+-------------------
+
+PARÁMETRO resultado (REST)
+
+1 - Solo puede existir un parámetro rest en una Función
+2 - El parámetro rest debe de ir siempre como último parámetro
+
+function agregar_alumno( arr_alumnos, ...alumnos) {
+
+    console.log( arguments );
+
+    for (let i = 0; i < alumnos.length; i++) {
+        arr_alumnos.push( alumnos[i]);
+    }
+
+    return arr_alumnos;
+
+}
+
+let alumnos_arr = ["Fernando"];
+let alumnos_arr2 = agregar_alumno(alumnos_arr, "Maria", "Pedro", "Susana", "Juan");
+
+console.log( alumnos_arr2 );
+
+-----------------
+
+OPERADOR SPREAD
+
+let numeros = [1, 2, 5, 10, 20, 100, 500];
+
+let max = Math.max( ...numeros );
+
+console.log( max ); // Mostrará el valor máximo de un array
+
+-------------------------------
+
+DIFERENCIAS ENTRE REST Y SPREAD
+
+ - REST -------> Junta los elementos en un arreglo
+ - SPREAD -----> Esparce los elementos como si fueran enviados de forma separada
+
+    function saludarRest( saludo, ...nombres ) {
+        for ( i in nombres ) {
+            console.log( `${saludo} ${nombres[i]}` );
+        }
+    }
+
+    function saludarSpread( saludo, ...nombres ) {
+        for ( i in nombres ) {
+            console.log( `${saludo} ${nombres}.` );
+        }
+    }
+
+    saludarRest( "Hola", "fernando", "maria", "susana");
+
+    let personas = ["melissa", "hernando", "juan"];
+    saludarSpread("Que tal!", personas);
+
+    let partes = ["brazos", "piernas"];
+    let cuerpo = ["cabeza", "cuello", ...partes, "pies", "dedos"];
+
+    console.log(cuerpo);
+
+------------------------
+
+COMPORTAMIENTO FUNCIONES
+
+function Persona (nombre) {
+
+    //if ( typeof new.target !== 'undefined) { // Para comprobar que se ha creado con 'new'
+        //this.nombre = nombre;
+    //} else {
+        //throw new Error ('Esta función debe de ser utilizada con el new);
+    //}
+    this.nombre = nombre;
+}
+
+var persona = new Persona("Fernando");
+var noEsPersona = Persona("Fernando");
+
+console.log(persona);
+console.log(noEsPersona);
+
+------------------------
+
+FUNCIONES FLECHA
+
+ - No hay creación de this, super, arguments y new.target
+ - No puede ser llamado por new. No tiene ningún metodo constructor
+ - No tiene prototypes
+ - No se puede cambiar "this"
+ - No hay objeto "arguments"
+ - No pueden tener nombres de parámetros duplicados
+
+ Ej:
+    ES5:
+        var miFuncion2 = fucntion (valor) {
+            return valor;
+        }
+
+    ES6:
+        let miFuncion2 = valor => valor;
+
+    ES5:
+        var sumar2 = function (num1, num2) {
+            return num1 + num2;
+        }
+    
+    ES6:
+        let sumar2 = (num1, num2) => num1 + num2;
+
+    ES5:
+        var saludar2 = function() {
+            return "Hola mundo";
+        }
+    
+    ES6 :
+        let saludar3 = () => "Hola mundo"
+
+    ES5:
+        var saludarPersona = function(nombre) {
+            var salida = "Hola, " + nombre;
+
+            return salida;
+        }
+
+    ES6:
+        let saludarPersona = nombre => {
+            let salida = `Hola, ${nombre}`;
+
+            return salida;
+        }
+
+    ES5:
+        var obtenerLibro = function (id) {
+            return {
+                id: id,
+                nombre: 'harry Potter'
+            }
+        }
+
+    ES6:
+        let obtenerLibro = id => ({ id: id, nombre: 'Harry Potter' })
+
+--------------------------------------------
+
+FUNCIONES ANÓNIMAS
+
+-  aprovechar las propiedades de ámbito de las variables de JavaScript y el uso de clausuras para escribir código más limpio que no interfiera con otro 
+    código JavaScript que pudiera haber en la página.
+
+ES5 :
+    var saludo = function(nombre) {
+        return "Hola" + nombre;
+    }("Fernando");
+
+ES6:
+    var saludo = ( nombre => `Hola ${nombre}` )("Melissa");
+
+----------
+
+NO HAY CAMBIOS EN EL OBJETO THIS
+
+- init: es una función que se puede ejecutar cuando el objeto es creado.
+
+ES5:
+
+    var manejador = {
+        id: '123',
+        init: function() {
+            document.addEventListener('click', (function(event) {
+                this.clickEnPagina( event.type ); // No va a encontrar la función porque hace referencia al documento global de la página antes de poner bind
+                // console.log(this) // Este this hace refencia al documento global de la página (#document) antes de poner el bind
+            }).bind(this), false); // ESte último this se refiere al manejador
+        },
+        clickEnPagina: function (type) {
+            console.log( "Manejando " + type + " para el id: " +  this.id);
+        }
+    }
+
+ES6: 
+    var manejador = {
+        id: '123',
+        init: function() {
+            document.addEventListener('click', 
+                event => this.clickEnPagina( event.type ));
+        },
+        clickEnPagina: function (type) {
+            console.log( "Manejando " + type + " para el id: " +  this.id);
+        }
+    }
+
+---------------------
+
+FUNCIONES FLECHA Y ARRAYS
+
+var arrays = [5, 10, 11, 2, 1, 8, 9, 20];
+
+ES5:
+    var ordenado = arrays.sort(function(a, b) {
+        return a - b;
+    });
+
+ES6:
+    let ordenado = arrays.sort( (a, b) => a - b);
+
+console.log(ordenado);
+
+-----------------
+
+FUNCIONES FLECHA y EJEMPLOS
+
+- Las funciones flecha no tienen objeto arguments
+
+var restar = (a, b) => a - b;
+
+console.log( typeof restar );
+console.log( restar instanceof Function );
+
+function ejemplo (x, y) {
+    ((a,b) => {
+        console.log ( arguments[0]) // Aún estando dentro una función como no tienen objeto arguments buscará en el padre más cercano
+                                    // Por lo tanto, imprimirá el valor 10
+    })(); // Función anónima
+}
+
+ejemplo(10, 20);
+
+--------------------------------
+
+OBJETOS
+
+ES5: 
+    function crearPersona( nombre, apellido, edad) {
+        return {
+            nombre: nombre,
+            apellido: apellido,
+            edad: edad
+        }
+    }
+
+    var melissa = crearPersona('Melissa', 'Flores', 30);
+    console.log( melissa );
+
+ES6:
+    function crearPersona( nombre, apellido, edad) {
+        return {
+            nombre,
+            apellido,
+            edad
+        }
+    }
+
+    var melissa = crearPersona('Melissa', 'Flores', 30);
+    console.log( melissa );
+
+--------------------------------------
+
+NOMBRES DE PROPIEDADES COMPUTADAS O PROCESADAS
+
+var subFijo = " nombre";
+
+var persona = {
+    [ "primer" + subFijo ]: 'Melissa',
+    [ "segundo" + subFijo ]: 'Karen',
+}
+
+console.log( persona['primer nombre'] );
+console.log( persona['segundo' + subFijo] );
+
+---------------------
+
+OBJECT.IS()
+
+ - Para comparar entre dos OBJETOS
+ Ej:
+    console.log( +0 == -0 );
+    console.log( +0 == -0 );
+    console.log( Object.is( +0, -0 ) );
+
+    console.log( "=============" );
+
+    console.log( 5 == 5 );
+    console.log( 5 == '5' );
+    console.log( 5 === '5' );
+
+    console.log( Object.is( 5, 5 ) );
+    console.log( Object.is( 5, '5' ) );
+
+-------------------------------
+
+OBJECT.ASSIGN()
+
+ES5:
+    function mezclar ( objReceptor, objDonador) {
+        
+        Object.keys( objDonador ).forEach( function(key) {
+            objReceptor[key] = objDonador[key];
+        });
+
+        return objReceptor;
+    }
+
+    var objReceptor = {}
+    var objDonador = {
+        nombre: 'mi-archivo.js'
+    }
+
+    console.log( mezclar( objReceptor, objDonador ));
+
+ES6:
+    var objReceptor = {}
+    var objDonador = {
+        nombre: 'mi-archivo.js'
+    }
+
+    console.log( Object.assign( objReceptor, objDonador ));
+
+-------------------------------------
+
+PROTOTIPOS
+
+let gato = {
+    sonido() {
+        console.log('Miau!!')
+    },
+    chillido() {
+        console.log( 'MIAU!!!')
+    }
+}
+
+let perro = {
+    sonido() {
+        console.log('Guau!!')
+    }
+};
+
+let angora = Object.create(gato);
+console.log( Object.getPrototypeOf( angora ) === gato);
+
+angora.sonido();
+angora.chillido();
+
+Objecto.setPropertyOf( angora, perro )
+
+console.log( Object.getPrototypeOf( angora ) === perro);
+
+angora.sonido();
+angora.chillido();
+
+------------------------------
+
+REFERENCIA 'SUPER'
+
+let persona = {
+    saludar() {
+        return "Hola";
+    }
+}
+
+let amigo = {
+    saludar() {
+        return super.saludar() + ", saludos!!";
+    }
+}
+
+Object.setPropertyOf( amigo, persona ); // Para poder heredar
+
+console.log( amigo.saludar() );
+
+--------------------------------------------
+
+DESTRUCTURACIÓN DE OBJETOS
+
+let ajustes = {
+    nombre : "fer herrera",
+    email: "a@a.com",
+    facebook: "dflvjnfdvklfdjnv",
+    google: "dkjfghflgh",
+    premium: true
+};
+
+let { email, facebook, google, nombre, premium:dePago, twitter:cuentaTwi = "twitterAccount" } = ajustes; 
+// Se puede inicializar variables con un valor por defecto. Y sí ya está definida en el objeto, predominará el valor definido en el objeto
+
+console.log( nombre, email, facebook, dePago, cuentaTwi);
+
+-------------------------------------------------
+
+DESTRUCTURACIÓN DE OBJETOS ANIDADOS
+
+let autoGuardado = {
+    archivo: "app.js",
+    cursor: {
+        linea: 2,
+        columna: 16
+    },
+    ultimoArchivo: {
+        archivo: "index",
+        cursor: {
+            linea: 8,
+            columna: 22
+        }
+    },
+    otroNodo: {
+        subNodo: {
+            cursor: {
+                linea: 11,
+                columna: 11
+            }
+        }
+    }
+}
+
+let  { cursor:cursorActivo } = autoGuardado;
+console.log( cursorActivo );
+
+let  { ultimoArchivo:{ cursor:ultimoArchivo} } = autoGuardado;
+console.log( ultimoArchivo );
+
+let  { otroNodo:{ subNodo:{ cursor:otroSuperNodo } } } = autoGuardado;
+console.log( otroSuperNodo );
+
+let otroSuperNodo2 = autoGuardado.otroNodo.subNodo.cursor;
+console.log( otroSuperNodo2 );
+
+-----------------------------------------
+
+DESTRUCTURACIÓN DE ARRAYS
+
+let frutas = ['platano', 'pera', 'uva'];
+
+let [ fruta1, fruta2 ] = frutas;
+
+console.log( fruta1, fruta2 );
+
+let [,, fruta3] = frutas; // Se ignora las dos primeras posiciones
+console.log( fruta3 );
+
+let otraFruta = 'manzana';
+[ otraFruta ] = frutas;
+console.log( otraFruta );
+
+let a = 1;
+let b = 2;
+
+[a, b] = [b, a]; // Se intercambian los valores entre ellos
+
+console.log(a);
+console.log(b);
+
+-------------------------------------
+
+DESTRUCTURACIÓN DE ARRAYS ANIDADOS
+
+let colores = [ 'rojo', [ 'verde', 'amarillo'], 'morado', 'naranja'];
+
+let [ color1, [color2] ] = colores1;
+console.log(color1);
+console.log(color2);
+
+let colores2 = [ 'rojo', 'azul', 'morado', 'naranja'];
+
+let [ colorPrincipal, ...demasColores ] = colores2;
+console.log( colorPrincipal );
+console.log( demasColores );
+
+VALORES POR DEFECTO DESTRUCTURACIÓN
+
+let frutas = [ 'platano' ]
+
+let [ fruta1, fruta = 'manzana'] = frutas;
+
+console.log( fruta1 );
+console.log( fruta2 );
+
+---------------------------------------
+
+DESTRUCTURACIÓN DE PARÁMETROS
+
+function crearJugador( nickname, 
+    { hp, sp, clase } = { hp: 100, sp: 50, clase: "Mago" } // Esto sería valores por defecto en caso de que no viniese ningún valor
+){
+    
+    //opciones = opciones || {};
+
+    //let hp = opciones.hp,
+        //sp = opciones.sp,
+        //clase = opciones.clase;
+
+    console.log( nickname, hp, sp, clase );
+}
+
+crearJugador( "Strider", {
+    hp: 500,
+    sp: 100,
+    clase: "Warrior"
+})
+
+----------------------------------------
+
+SETS
+
+- Son parecidos a los arrays, exceptuando que tiene funciones nativas en su prototipo y no pueden tener duplicados
+- Pueden ser de cualquier tipo. String, integers, etc
+- Si una posición es un STRING, lo descompone y excluye los duplicados --> let personasSet = new Set("fernando"); --> 'f', 'e', 'r', 'n', 'a', 'd', 'o'
+
+let items = new Set();
+
+items.add( 10 );
+items.add( 11 );
+items.add( 8 );
+items.add( 7 );
+items.add( 7 ); // Como no permite elementos duplicados directamente no saldrá ningún error simplemente lo ignorará
+items.add( '7' ); // Aceptará esto porque a la hora de añadir lo compara con el Object.is y no es igual un 7 que un '7'
+
+console.log(items.size);
+console.log(items);
+*************
+
+let items2 = new Set( [1, 2, 3, 4, 5, 6, 7, 7, 7, 7]);
+
+console.log( items2.has(7) ) // Hace una búsqueda y devuelve un booleano
+
+items2.delete( 3 ); // Busca el número y no la posición
+items2.clear(); // Borra todos los elementos
+
+*******
+let personasSet = new Set( ['Fernando', 'María', 'Susana'] );
+
+personasSet.forEach(function(valor, llave, setOriginal) {
+    console.log( valor, llave, setOriginal );
+    console.log( personas == setOriginal );
+});
+****************
+let numeros = [1, 2, 3, 4, 5, 6, 7, 7, 7, 7];
+
+let setNumeros = new Set( numeros );
+console.log( setNumeros );
+
+let arraysNumeros = eliminaDuplicados (numeros);
+console.log( arraysNumeros );
+
+function eliminaDuplicados( items ) {
+    // Se pasa un array de números, se convierte en set para eliminar duplicados y luego se convierte de nuevo en un array
+    //let set = new Set( items );
+    //return [...set];
+
+    return [...new Set( items )];
+}
+****************+++
+
+let personasSet = new Set(["fernando", "Maria"]);
+console.log( personasSet );
+personasSet.delete("fernando");
+
+*** WEEKSET
+
+- Sirven para almacenar una referencia a los objetos. No se pueden meter valores primitivos
+- Las funciones ADD, HAS, REMOVE, dan un error si enviamos como parámetro algo que no sea un objeto
+- No tiene manera de hacer repeticiones o ciclos FOR IN
+- No tienen keys(), values(), por lo que no hay manera vía programación de saber cuantos elementos hay dentro
+- No tienen un for-each tampoco
+- No tienen propiedad SIZE
+
+
+-----------------------------
+MAPAS
+
+- Un nuevo tipo de colección de datos. Colección de datos clave --> valor
+- Los mapas tienen : HAS, DELETE, CLEAR, SIZE e ITERACIONES
+- Los mapas no permiten que haya más de una clave repetida. En caso de que ocurra, prevalecerá la última referencia
+
+let mapa = new Map();
+
+mapa.set( 'nombre', 'fernando' );
+mapa.set( 'edad', '31' );
+mapa.set( 'apellido'); // Tendría valor undefined
+mapa.set(  ); // undefined, undefined
+mapa.set( {}, {hola: 'hola mundo'} );
+
+console.log( mapa );
+console.log( mapa.size );
+
+console.log( mapa.get( 'nombre' ) ); // fernando
+console.log( mapa.get( 'edad' ) ); // 31
+console.log( mapa.has( 'nombre' ) ); // true
+console.log( mapa.has( 'casa' ) ); // false - Solamente sirve para las claves y no para los valores
+
+mapa.delete( 'nombre' ); // Borra la clave valor entera
+
+mapa.set( 'edad' ); // Modificará el valor actual por un 'undefined' porque no se ha puesto ningún valor
+
+mapa.clear(); // Borra todo el mapa
+
+**********
+INICIALIZACIÓN MAPAS
+
+let mapa2 = new Map( [ [ 'nombre', 'fernando' ], ['nombre', 'Maria'] ]);
+
+console.log( mapa2 );
+****
+FOR EACH
+
+let mapa3 = new Map( [ [ 'nombre', 'fernando' ], ['edad', 31] ]);
+
+mapa3.forEach( function( valor, llave, mapaOrigen ) {
+    console.log(`Clave: ${llave}, valor: ${valor}`);
+});
+
+Con función flecha:
+mapa3.forEach( ( valor, llave, mapaOrigen ) => console.log(`Clave: ${llave}, valor: ${valor}`) )
+
+****************
+
+FOR - OF
+
+- Ciclo especializado en colección de datos
+
+let numeros = [1, 2, 3, 4, 5, 6, 7];
+
+for ( let numero of numeros) {
+    console.log(numero);
+};
+
+-----------------------------
+
+CLASES JAVASCRIPT
+
+- El typeof de una clase siempre devuelve que es una 'function' --> class Persona{}; console.log( typeof Persona )
+
+ES5:
+    function Persona( nombre ) {
+        this.nombre = nombre;
+    }
+
+    // Expandir una clase, por ejemplo añadiendo una función o método sería así:
+    Persona.prototype.decirNombre = function() {
+        console.log( this.nombre );
+    }
+
+    let fernando = new Persona("fernando");
+    fernando.decirNombre();
+
+    // Todo esto funcionará si fernando se declara con 'new'. Si no tuviese 'new' devolvería false
+    console.log( fernando instanceof Persona );
+    console.log( fernando instanceof Object );
+
+ES6:
+    class Persona {
+        constructor( nombre ) {
+            this.nombre = nombre;
+        }
+
+        // Persona.protoype.decirNombre().....
+        decirNombre() {
+            console.log( this.nombre );
+        }
+    }
+
+    let fernando = new Persona('Fernandoo'); // Si se quita la palabra reservada 'new' daría error
+    fernando.decirNombre();
+
+******************
+CLASES COMO EXPRESIONES
+
+let Persona = class {
+    constructor() {
+        this.nombre = "";
+        this.edad = 30;
+    }
+
+    decirNombre() {
+        console.log( "HolaMundoo" );
+    }
+}
+
+let fernando = new Persona();
+
+************************
+CLASES COMO PARÁMETROS
+
+function creadorClase( definicionClase ) {
+    return new definicionClase;
+}
+
+let objeto = creadorClase( class { // Definir la clase en tiempo de ejecución
+    constructor() {
+        this.nombre = "";
+        this.edad = 30;
+    }
+
+    saludar() {
+        console.log( "HolaMundoo" );
+    }
+});
+
+objeto.saludar();
+
+class Cuadrado {
+    constructor( lado ) {
+        this.lado = lado;
+    }
+
+    getArea() {
+        return this.lado * this.lado;
+    }
+};
+
+function imprimirCuadrado( cuadrado ) {
+    if ( !(cuadrado instanceof Cuadrado) ) {
+        console.error( "El parámetro enviado no es un cuadrado");
+        return;
+    }
+    console.log( cuadrado.getArea() );
+}
+
+let mesa = new Cuadrado(10);
+imprimirCuadrado( mesa );
+
+-----------------
+MIEMBROS ESTÁTICOS Y MÉTODOS COMPUTADOS
+
+- Método estático --> es un método que nos va a permitir ejecutar alguna función sin instanciar la clase
+
+let nombreMetodo = "gritarMetodo"; // Definición de método computado. 
+
+class Persona {
+    constructor( nombre ) {
+        this.nomnbre = nombre;
+    }
+
+    decirNombre() {
+        console.log( this.nombre );
+    }
+
+    [ nombreMetodo ]() { // Esto es un método computado. Son funciones que se pueden definir a través de una variable
+        console.log( this.nombre.toUpperCase() );
+    }
+
+    static crear( nombre ) {
+        return new Persona(nombre);
+    }
+}
+
+let yo = Persona.crear('Fernando');
+console.log( yo );
+
+******************++
+HERENCIAS DE CLASES
+
+class Rectangulo {
+    constructor( alto, lado ) {
+        this.alto = alto;
+        this.lado = lado;
+    }
+
+    getArea() {
+        return "Rectángulo: " + ( this.lado * this.alto );
+    }
+}
+
+let rectangulo = new Rectangulo(3, 2);
+
+class Cuadrado extends Rectangulo {
+    constructor(alto) {
+        super( alto, alto );
+    }
+
+    getArea() {
+        // return "Cuadrado: " + (this.alto * this.alto);
+        return super.getArea(); // Ejemplo para llamar a un método del padre
+    }
+}
+
+let cuadrado = new Cuadrado( 2 );
+console.log( cuadrado.getArea() );
+
+console.log( cuadrado instanceof Cuadrado );
+console.log( cuadrado instanceof Rectangulo );
+
+---------------------------------
+PROMESAS
+
+function tareaAsincrona() {
+
+    let promesa = new Promise( (resolve, reject ) => { // Espera 2 argumentos. El primero es cuando va todo bien y el otro cuando va algo mal    
+        setTimeout( function() {
+            console.log( "Proceso Asincrono terminado" )
+            resolve();
+        }, 1300)
+    });
+
+    return promesa;
+
+}
+
+tareaAsincrona().then( function() {
+    console.log("Todo OK");
+}, function() {
+    console.error("Todo MAL");
+});
+console.log( "código secuencial" );
